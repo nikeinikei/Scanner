@@ -1,15 +1,10 @@
 package compiler;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class Scanner implements Iterator<Token> {
-    /**
-     * a collection of characters that act as blank space and can be ignored by the scanner
-     */
-    private static final Collection<Character> WHITE_SPACES = Arrays.asList(' ', '\t');
 
+public class Scanner implements Iterator<Token> {
     /**
      * the input to the scanner
      */
@@ -29,6 +24,7 @@ public class Scanner implements Iterator<Token> {
      * all Automatons that can check strings for acceptance
      */
     private Collection<Automaton> DFSAs;
+
     /**
      * the token that was last return on the @method this#next()
      */
@@ -39,7 +35,7 @@ public class Scanner implements Iterator<Token> {
 
         //add an extra whitespace, if needed, to make automatons
         //using lookAhead work if it's at the ned of the file
-        if (!WHITE_SPACES.contains(input.charAt(input.length() - 1)))
+        if (!Character.isWhitespace(input.charAt(input.length() - 1)))
             this.input = input + " ";
     }
 
@@ -48,7 +44,7 @@ public class Scanner implements Iterator<Token> {
     }
 
     private void skipWhiteSpaces() {
-        while (index < input.length() && WHITE_SPACES.contains(input.charAt(index))) {
+        while (index < input.length() && Character.isWhitespace(input.charAt(index))) {
             index++;
         }
         lookAhead = index;
@@ -65,10 +61,10 @@ public class Scanner implements Iterator<Token> {
         lookAhead = index + 1;
         while (notEOF(lookAhead)) {
             var currentString = input.substring(index, lookAhead);
-            for (Automaton dfsa : DFSAs)
-                if (dfsa.accepts(currentString)) {
-                    lastToken = dfsa.getTokenConstructorWrapper().newInstance(currentString);
-                    if (dfsa.isLookAhead())
+            for (Automaton automaton : DFSAs)
+                if (automaton.accepts(currentString)) {
+                    lastToken = automaton.getTokenConstructorWrapper().newInstance(currentString);
+                    if (automaton.isLookAhead())
                         index = lookAhead;
                     else
                         index = ++lookAhead;

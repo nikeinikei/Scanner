@@ -6,7 +6,7 @@ package compiler;
 public abstract class Automaton {
     /**
      * if lookAhead is true this Automaton needs to look at the next character before
-     * deciding that a string is valid.
+     * deciding that a string is valid. This is important for the scanner.
      */
     private boolean lookAhead;
 
@@ -20,11 +20,16 @@ public abstract class Automaton {
         this.tokenConstructorWrapper = tokenConstructorWrapper;
     }
 
-    //GETTERS
+    /**
+     * @return this#lookAhead
+     */
     public boolean isLookAhead() {
         return lookAhead;
     }
 
+    /**
+     * @return this#tokenConstructorWrapper
+     */
     public TokenConstructorWrapper getTokenConstructorWrapper() {
         return tokenConstructorWrapper;
     }

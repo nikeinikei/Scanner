@@ -1,6 +1,5 @@
 import compiler.Automaton;
 import compiler.Scanner;
-import compiler.Token;
 import org.junit.Test;
 
 import java.util.Arrays;

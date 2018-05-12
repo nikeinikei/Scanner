@@ -1,8 +1,9 @@
-import compiler.*;
+import compiler.Automaton;
+import compiler.Scanner;
+import compiler.Token;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 
 public class AppTest {
@@ -42,9 +43,9 @@ public class AppTest {
 
     @Test
     public void testIdentifierAndNumberAutomaton() {
-        Scanner scanner = new Scanner("n1k1 2", Arrays.asList(identifierAutomaton, numberAutomaton));
+        var scanner = new Scanner("n1k1 2", Arrays.asList(identifierAutomaton, numberAutomaton));
         while (scanner.hasNext()) {
-            Token next = scanner.next();
+            var next = scanner.next();
             System.out.println(next);
         }
     }

@@ -64,7 +64,7 @@ public class Scanner implements Iterator<Token> {
         skipWhiteSpaces();
         lookAhead = index + 1;
         while (notEOF(lookAhead)) {
-            String currentString = input.substring(index, lookAhead);
+            var currentString = input.substring(index, lookAhead);
             for (Automaton dfsa : DFSAs)
                 if (dfsa.accepts(currentString)) {
                     lastToken = dfsa.getTokenConstructorWrapper().newInstance(currentString);

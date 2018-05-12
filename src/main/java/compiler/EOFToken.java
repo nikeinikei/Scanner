@@ -1,7 +1,7 @@
 package compiler;
 
 /**
- * This token will be return when the scanner has reached the end of the file
+ * A Token signaling the end of file. There won't be any additional tokens after this one, in one scan.
  */
 public class EOFToken extends Token {
     public EOFToken() {

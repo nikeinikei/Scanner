@@ -1,28 +1,28 @@
 package compiler;
 
-public abstract class FiniteStateAutomaton {
+/**
+ * An Automaton can accept strings that match a certain criteria
+ */
+public abstract class Automaton {
     /**
-     * if lookAhead is true this FiniteStateAutomaton needs to look at the next character before
+     * if lookAhead is true this Automaton needs to look at the next character before
      * deciding that a string is valid.
      */
     private boolean lookAhead;
 
     /**
-     * this wrapper will be called with the string that was validated by this FiniteStateAutomaton
+     * this wrapper will be called with the string that was validated by this Automaton
      */
     private TokenConstructorWrapper tokenConstructorWrapper;
 
-    public FiniteStateAutomaton(boolean lookAhead, TokenConstructorWrapper tokenConstructorWrapper) {
+    public Automaton(boolean lookAhead, TokenConstructorWrapper tokenConstructorWrapper) {
         this.lookAhead = lookAhead;
         this.tokenConstructorWrapper = tokenConstructorWrapper;
     }
 
+    //GETTERS
     public boolean isLookAhead() {
         return lookAhead;
-    }
-
-    public void setLookAhead(boolean lookAhead) {
-        this.lookAhead = lookAhead;
     }
 
     public TokenConstructorWrapper getTokenConstructorWrapper() {
@@ -31,7 +31,7 @@ public abstract class FiniteStateAutomaton {
 
     /**
      * @param input the input string
-     * @return returns true if the FiniteStateAutomaton accepts the input String
+     * @return returns true if the Automaton accepts the input String
      */
     public abstract boolean accepts(String input);
 }

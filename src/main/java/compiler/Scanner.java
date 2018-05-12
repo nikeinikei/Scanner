@@ -10,7 +10,6 @@ public class Scanner implements Iterator<Token> {
      */
     private static final Collection<Character> WHITE_SPACES = Arrays.asList(' ', '\t');
 
-
     /**
      * the input to the scanner
      */
@@ -27,22 +26,21 @@ public class Scanner implements Iterator<Token> {
     private int lookAhead = 0;
 
     /**
-     * all FiniteStateAutomatons that will accept strings
+     * all Automatons that can check strings for acceptance
      */
-    private Collection<FiniteStateAutomaton> DFSAs;
+    private Collection<Automaton> DFSAs;
     /**
      * the token that was last return on the @method this#next()
      */
     private Token lastToken = null;
 
-    public Scanner(String input, Collection<FiniteStateAutomaton> DFSAs) {
+    public Scanner(String input, Collection<Automaton> DFSAs) {
         this.DFSAs = DFSAs;
-        //add an extra whitespace to make automatons
-        //using lookAhead work if it's at the ned of the file
-        this.input = input + " ";
 
-        //skip initial whitespaces
-        skipWhiteSpaces();
+        //add an extra whitespace, if needed, to make automatons
+        //using lookAhead work if it's at the ned of the file
+        if (!WHITE_SPACES.contains(input.charAt(input.length() - 1)))
+            this.input = input + " ";
     }
 
     private boolean notEOF(int index) {
@@ -67,18 +65,15 @@ public class Scanner implements Iterator<Token> {
         lookAhead = index + 1;
         while (notEOF(lookAhead)) {
             String currentString = input.substring(index, lookAhead);
-            for (FiniteStateAutomaton dfsa : DFSAs) {
-                boolean accepts = dfsa.accepts(currentString);
-                if (accepts) {
+            for (Automaton dfsa : DFSAs)
+                if (dfsa.accepts(currentString)) {
                     lastToken = dfsa.getTokenConstructorWrapper().newInstance(currentString);
-                    if (dfsa.isLookAhead()) {
+                    if (dfsa.isLookAhead())
                         index = lookAhead;
-                    } else {
+                    else
                         index = ++lookAhead;
-                    }
                     return lastToken;
                 }
-            }
             lookAhead++;
         }
 

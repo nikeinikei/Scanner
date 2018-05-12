@@ -1,6 +1,7 @@
 .gradle
 .settings
 /bin
+/out
 /gradle
 .classpath
 .project

@@ -43,7 +43,7 @@ public class AppTest {
             }
         });
 
-        Scanner scanner = new Scanner("f123 a234", dfsas);
+        Scanner scanner = new Scanner("niki0 2e10", dfsas);
         while (scanner.hasNext()) {
             Token next = scanner.next();
             System.out.println(next);

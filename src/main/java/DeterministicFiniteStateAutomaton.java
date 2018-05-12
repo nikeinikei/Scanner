@@ -1,35 +1,23 @@
+import java.lang.reflect.Constructor;
 import java.util.Collection;
 
-public class DeterministicFiniteStateAutomaton {
+public class DeterministicFiniteStateAutomaton extends FiniteStateAutomaton {
     private int startingState;
     private TransitionFunction transitionFunction;
     private Collection<Integer> acceptingStates;
-    private boolean lookAhead = false;
-    private Class tokenClass = Token.class;
 
-    public DeterministicFiniteStateAutomaton(int startingState, TransitionFunction transitionFunction, Collection<Integer> acceptingStates) {
+    public DeterministicFiniteStateAutomaton(boolean lookAhead,
+                                             TokenConstructorWrapper tokenConstructorWrapper,
+                                             int startingState,
+                                             TransitionFunction transitionFunction,
+                                             Collection<Integer> acceptingStates) {
+        super(lookAhead, tokenConstructorWrapper);
         this.startingState = startingState;
         this.transitionFunction = transitionFunction;
         this.acceptingStates = acceptingStates;
     }
 
-    public void setLookAhead(boolean lookAhead) {
-        this.lookAhead = lookAhead;
-    }
-
-    public boolean getLookAhead() {
-        return this.lookAhead;
-    }
-
-    private void setTokenClass(Class tokenClass) {
-        this.tokenClass = tokenClass;
-    }
-
-    private Class getTokenClass() {
-        return tokenClass;
-    }
-
-    public boolean checkString(String input) {
+    public boolean accepts(String input) {
         int currentState = this.startingState;
         char currentChar;
         for (int i = 0; i < input.length(); i++) {

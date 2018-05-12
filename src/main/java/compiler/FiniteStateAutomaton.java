@@ -1,5 +1,15 @@
+package compiler;
+
 public abstract class FiniteStateAutomaton {
+    /**
+     * if lookAhead is true this FiniteStateAutomaton needs to look at the next character before
+     * deciding that a string is valid.
+     */
     private boolean lookAhead;
+
+    /**
+     * this wrapper will be called with the string that was validated by this FiniteStateAutomaton
+     */
     private TokenConstructorWrapper tokenConstructorWrapper;
 
     public FiniteStateAutomaton(boolean lookAhead, TokenConstructorWrapper tokenConstructorWrapper) {
@@ -19,5 +29,9 @@ public abstract class FiniteStateAutomaton {
         return tokenConstructorWrapper;
     }
 
+    /**
+     * @param input the input string
+     * @return returns true if the FiniteStateAutomaton accepts the input String
+     */
     public abstract boolean accepts(String input);
 }

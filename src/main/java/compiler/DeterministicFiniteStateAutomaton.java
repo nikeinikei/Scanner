@@ -1,4 +1,5 @@
-import java.lang.reflect.Constructor;
+package compiler;
+
 import java.util.Collection;
 
 public class DeterministicFiniteStateAutomaton extends FiniteStateAutomaton {

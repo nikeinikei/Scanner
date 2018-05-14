@@ -1,3 +1,5 @@
+package compiler;
+
 import compiler.Token;
 
 public class IdentifierToken extends Token {
@@ -7,7 +9,7 @@ public class IdentifierToken extends Token {
 
     @Override
     public String toString() {
-        return "IdentifierToken{" +
+        return "compiler.IdentifierToken{" +
                 "value=" + value +
                 '}';
     }

@@ -1,24 +1,29 @@
 package compiler;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
 
 public class Scanner implements Iterator<Token> {
+    private static final Logger logger = Logger.getLogger(Scanner.class.getName());
+
     /**
      * the input to the scanner
      */
     private String input;
 
     /**
-     * the current index of the scan
+     * the current begin of the scan
      */
-    private int index = 0;
+    private int begin = 0;
 
     /**
-     * the index of the lookAhead pointer. This will always be greater or equal to @member index
+     * the begin of the end pointer. This will always be greater or equal to @member begin
      */
-    private int lookAhead = 0;
+    private int end = 0;
 
     /**
      * all Automatons that can check strings for acceptance
@@ -33,10 +38,9 @@ public class Scanner implements Iterator<Token> {
     public Scanner(String input, Collection<Automaton> DFSAs) {
         this.DFSAs = DFSAs;
 
-        //add an extra whitespace, if needed, to make automatons
+        //add an extra whitespace to make automatons
         //using lookAhead work if it's at the ned of the file
-        if (!Character.isWhitespace(input.charAt(input.length() - 1)))
-            this.input = input + " ";
+        this.input = input + " ";
     }
 
     private boolean notEOF(int index) {
@@ -44,10 +48,10 @@ public class Scanner implements Iterator<Token> {
     }
 
     private void skipWhiteSpaces() {
-        while (index < input.length() && Character.isWhitespace(input.charAt(index))) {
-            index++;
+        while (begin < input.length() && Character.isWhitespace(input.charAt(begin))) {
+            begin++;
         }
-        lookAhead = index;
+        end = begin;
     }
 
     @Override
@@ -57,23 +61,47 @@ public class Scanner implements Iterator<Token> {
 
     @Override
     public Token next() {
+        if (lastToken instanceof EOFToken)
+            throw new NoSuchElementException();
+
         skipWhiteSpaces();
-        lookAhead = index + 1;
-        while (notEOF(lookAhead)) {
-            var currentString = input.substring(index, lookAhead);
-            for (Automaton automaton : DFSAs)
-                if (automaton.accepts(currentString)) {
-                    lastToken = automaton.getTokenConstructorWrapper().newInstance(currentString);
-                    if (automaton.isLookAhead())
-                        index = lookAhead;
-                    else
-                        index = ++lookAhead;
-                    return lastToken;
-                }
-            lookAhead++;
+
+        if (begin == input.length()) {
+            lastToken = new EOFToken();
+            return lastToken;
         }
 
-        lastToken = new EOFToken();
-        return lastToken;
+        end = begin + 1;
+        while (notEOF(end)) {
+            var currentString = input.substring(begin, end);
+            for (Automaton automaton : DFSAs) {
+                var accepts = automaton.accepts(currentString);
+                if (accepts) {
+                    if (automaton.isLookAhead()) {
+                        lastToken = automaton.getTokenConstructorWrapper().newInstance(input.substring(begin, end - 1));
+                        begin = --end;
+                    } else {
+                        lastToken = automaton.getTokenConstructorWrapper().newInstance(input.substring(begin, end));
+                        begin = end;
+                    }
+                    return lastToken;
+                }
+            }
+
+            end++;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("error while parsing at index ").append(begin);
+        sb.append("\n");
+        sb.append(input);
+        sb.append("\n");
+        for (int i = 0; i < begin; i++) {
+            sb.append(" ");
+        }
+        sb.append("^");
+        logger.severe(sb.toString());
+
+        throw new IllegalStateException("error while parsing");
     }
 }

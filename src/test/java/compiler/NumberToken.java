@@ -1,3 +1,5 @@
+package compiler;
+
 import compiler.Token;
 
 public class NumberToken extends Token {
@@ -7,7 +9,7 @@ public class NumberToken extends Token {
 
     @Override
     public String toString() {
-        return "NumberToken{" +
+        return "compiler.NumberToken{" +
                 "value=" + value +
                 '}';
     }

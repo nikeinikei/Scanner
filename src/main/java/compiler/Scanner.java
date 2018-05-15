@@ -1,6 +1,5 @@
 package compiler;
 
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -91,6 +90,7 @@ public class Scanner implements Iterator<Token> {
             end++;
         }
 
+        //clean error message
         StringBuilder sb = new StringBuilder();
         sb.append("error while parsing at index ").append(begin);
         sb.append("\n");

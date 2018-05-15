@@ -1,5 +1,4 @@
-import compiler.EOFToken;
-import compiler.Scanner;
+import compiler.*;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -10,7 +9,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class AppTest {
+public class ScannerTest {
     @Test
     public void testIdentifierAndNumberAutomaton() {
         var scanner = new Scanner("( )niki0 2345 timo4", Arrays.asList(
@@ -20,10 +19,14 @@ public class AppTest {
                 StaticVariables.closingParenthAutomaton,
                 StaticVariables.stringAutomaton
         ));
-        while (scanner.hasNext()) {
-            var next = scanner.next();
-            System.out.println(next);
-        }
+        ScannerUtil.assertSCannerOutputClasses(scanner, Arrays.asList(
+                OpeningParenthToken.class,
+                ClosingParenthToken.class,
+                IdentifierToken.class,
+                NumberToken.class,
+                IdentifierToken.class,
+                EOFToken.class
+        ));
     }
 
     @Test
@@ -43,5 +46,17 @@ public class AppTest {
         assertTrue(scanner.next() instanceof EOFToken);
         assertFalse(scanner.hasNext());
         scanner.next();
+    }
+
+    @Test
+    public void testScannerWithStringAutomaton() {
+        var scanner = new Scanner(
+                "\"hallo\" \"\\n\\r.ddd\\t\"",
+                Collections.singletonList(StaticVariables.stringAutomaton)
+        );
+        ScannerUtil.assertSCannerOutputClasses(
+                scanner,
+                Arrays.asList(StringToken.class, StringToken.class, EOFToken.class)
+        );
     }
 }

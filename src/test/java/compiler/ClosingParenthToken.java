@@ -1,7 +1,5 @@
 package compiler;
 
-import compiler.Token;
-
 public class ClosingParenthToken extends Token {
     public ClosingParenthToken(Object value) {
         super(value);

@@ -39,4 +39,10 @@ public abstract class Automaton {
      * @return returns true if the Automaton accepts the input String
      */
     public abstract boolean accepts(String input);
+
+    public abstract void input(char input);
+
+    public abstract boolean isAccepting();
+
+    public abstract void reset();
 }

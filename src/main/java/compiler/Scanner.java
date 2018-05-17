@@ -39,7 +39,7 @@ public class Scanner implements Iterator<Token> {
 
         //add an extra whitespace to make automatons
         //using lookAhead work if it's at the ned of the file
-        this.input = input + " ";
+        this.input = input;
     }
 
     private boolean notEOF(int index) {

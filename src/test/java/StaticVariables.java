@@ -1,40 +1,62 @@
 import compiler.*;
 
 import java.util.Collections;
+import java.util.function.Function;
 
 public class StaticVariables {
-    static Automaton identifierAutomaton = new Automaton(true, IdentifierToken::new) {
-        @Override
-        public boolean accepts(String input) {
-            if (!Character.isLetter(input.charAt(0))) {
-                return false;
-            }
+    private static Function<Character, Integer> func = (character -> {
+        if (Character.isLetterOrDigit(character))
+            return 1;
+        else if (Character.isWhitespace(character))
+            return 2;
+        else
+            return -1;
+    });
 
-            for (int i = 1; i < input.length() - 1; i++) {
-                if (!Character.isLetterOrDigit(input.charAt(i))) {
-                    return false;
+    static Automaton identifierAutomaton = new DeterministicFiniteStateAutomaton(
+            true,
+            IdentifierToken::new,
+            0,
+            (state, c) -> {
+                switch (state) {
+                    case 0:
+                        if (Character.isLetter(c))
+                            return 1;
+                        else
+                            return -1;
+                    case 1:
+                        return func.apply(c);
+                    case 2:
+                        return -1;
+                    default:
+                        return -1;
                 }
-            }
+            },
+            Collections.singletonList(2)
+    );
 
-            return !Character.isLetterOrDigit(input.charAt(input.length() - 1));
-        }
-    };
-    static Automaton numberAutomaton = new Automaton(true, NumberToken::new) {
-        @Override
-        public boolean accepts(String input) {
-            if (!Character.isDigit(input.charAt(0))) {
-                return false;
-            }
-
-            for (int i = 1; i < input.length() - 1; i++) {
-                if (!Character.isLetterOrDigit(input.charAt(i))) {
-                    return false;
+    static Automaton numberAutomaton = new DeterministicFiniteStateAutomaton(
+            true,
+            NumberToken::new,
+            0,
+            (state, c) -> {
+                switch (state) {
+                    case 0:
+                        if (Character.isDigit(c))
+                            return 1;
+                        else
+                            return -1;
+                    case 1:
+                        return func.apply(c);
+                    case 2:
+                        return -1;
+                    default:
+                        return -1;
                 }
-            }
+            },
+            Collections.singletonList(2)
+    );
 
-            return !Character.isLetterOrDigit(input.charAt(input.length() - 1));
-        }
-    };
     static Automaton openingParenthAutomaton = new SingleCharacterAutomaton(OpeningParenthToken::new, '(');
     static Automaton closingParenthAutomaton = new SingleCharacterAutomaton(ClosingParenthToken::new, ')');
 

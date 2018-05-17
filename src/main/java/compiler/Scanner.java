@@ -27,15 +27,15 @@ public class Scanner implements Iterator<Token> {
     /**
      * all Automatons that can check strings for acceptance
      */
-    private Collection<Automaton> DFSAs;
+    private Collection<Automaton> automatons;
 
     /**
      * the token that was last return on the @method this#next()
      */
     private Token lastToken = null;
 
-    public Scanner(String input, Collection<Automaton> DFSAs) {
-        this.DFSAs = DFSAs;
+    public Scanner(String input, Collection<Automaton> automatons) {
+        this.automatons = automatons;
 
         //add an extra whitespace to make automatons
         //using lookAhead work if it's at the ned of the file
@@ -43,7 +43,7 @@ public class Scanner implements Iterator<Token> {
     }
 
     private boolean notEOF(int index) {
-        return index <= input.length();
+        return index < input.length();
     }
 
     private void skipWhiteSpaces() {
@@ -65,29 +65,39 @@ public class Scanner implements Iterator<Token> {
 
         skipWhiteSpaces();
 
-        if (begin == input.length()) {
+        if (begin >= input.length()) {
             lastToken = new EOFToken();
             return lastToken;
         }
 
-        end = begin + 1;
+        end = begin;
         while (notEOF(end)) {
-            var currentString = input.substring(begin, end);
-            for (Automaton automaton : DFSAs) {
-                var accepts = automaton.accepts(currentString);
-                if (accepts) {
-                    if (automaton.isLookAhead()) {
-                        lastToken = automaton.getTokenConstructorWrapper().newInstance(input.substring(begin, end - 1));
-                        begin = --end;
-                    } else {
-                        lastToken = automaton.getTokenConstructorWrapper().newInstance(input.substring(begin, end));
+            for (var automaton : automatons) {
+                automaton.input(input.charAt(end));
+                if (automaton.isAccepting()) {
+                    String wholeString = input.substring(begin, end + 1);
+                    lastToken = automaton.getTokenConstructorWrapper().newInstance(wholeString);
+                    if (automaton.isLookAhead())
                         begin = end;
-                    }
+                    else
+                        begin = end + 1;
+                    for (var a : automatons)
+                        a.reset();
                     return lastToken;
                 }
             }
-
             end++;
+        }
+
+        for (var automaton : automatons) {
+            automaton.input(' ');
+            if (automaton.isAccepting()) {
+                String wholeString = input.substring(begin);
+                lastToken = automaton.getTokenConstructorWrapper().newInstance(wholeString);
+                automatons.forEach(Automaton::reset);
+                begin = input.length();
+                return lastToken;
+            }
         }
 
         //clean error message

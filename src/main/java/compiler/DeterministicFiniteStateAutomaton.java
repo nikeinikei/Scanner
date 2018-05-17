@@ -27,6 +27,8 @@ public class DeterministicFiniteStateAutomaton extends Automaton {
      */
     private Collection<Integer> acceptingStates;
 
+    private int currentState;
+
     public DeterministicFiniteStateAutomaton(boolean lookAhead,
                                              TokenConstructorWrapper tokenConstructorWrapper,
                                              int startingState,
@@ -34,8 +36,15 @@ public class DeterministicFiniteStateAutomaton extends Automaton {
                                              Collection<Integer> acceptingStates) {
         super(lookAhead, tokenConstructorWrapper);
         this.startingState = startingState;
+        this.currentState = startingState;
         this.transitionFunction = transitionFunction;
         this.acceptingStates = acceptingStates;
+    }
+
+    private void errorCallback(TransitionFunctionException e) {
+        System.err.println("there was an exception during the transitionfunction");
+        e.printStackTrace();
+        System.exit(-1);
     }
 
     @Override
@@ -47,11 +56,28 @@ public class DeterministicFiniteStateAutomaton extends Automaton {
             try {
                 currentState = transitionFunction.call(currentState, currentChar);
             } catch (TransitionFunctionException e) {
-                System.err.println("there was an exception during the transitionfunction");
-                e.printStackTrace();
-                System.exit(-1);
+                errorCallback(e);
             }
         }
         return acceptingStates.contains(currentState);
+    }
+
+    @Override
+    public void input(char input) {
+        try {
+            currentState = transitionFunction.call(currentState, input);
+        } catch (TransitionFunctionException e) {
+            errorCallback(e);
+        }
+    }
+
+    @Override
+    public boolean isAccepting() {
+        return this.acceptingStates.contains(this.currentState);
+    }
+
+    @Override
+    public void reset() {
+        this.currentState = this.startingState;
     }
 }

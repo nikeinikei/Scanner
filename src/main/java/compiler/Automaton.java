@@ -38,7 +38,14 @@ public abstract class Automaton {
      * @param input the input string
      * @return returns true if the Automaton accepts the input String
      */
-    public abstract boolean accepts(String input);
+    public boolean accepts(String input) {
+        for (char c : input.toCharArray()) {
+            input(c);
+        }
+        var isAccepting = isAccepting();
+        reset();
+        return isAccepting;
+    }
 
     public abstract void input(char input);
 

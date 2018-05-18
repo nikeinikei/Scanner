@@ -5,9 +5,9 @@ package compiler;
  * this class will be returned by the scanner#next() method
  */
 public abstract class Token {
-    protected Object value;
+    protected String value;
 
-    public Token(Object value) {
+    public Token(String value) {
         this.value = value;
     }
 }

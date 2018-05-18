@@ -1,14 +1,11 @@
 package compiler;
 
+import java.text.ParseException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.logging.Logger;
 
 
-public class Scanner implements Iterator<Token> {
-    private static final Logger logger = Logger.getLogger(Scanner.class.getName());
-
+public class Scanner {
     /**
      * the input to the scanner
      */
@@ -36,16 +33,20 @@ public class Scanner implements Iterator<Token> {
 
     public Scanner(String input, Collection<Automaton> automatons) {
         this.automatons = automatons;
-
-        //add an extra whitespace to make automatons
-        //using lookAhead work if it's at the ned of the file
         this.input = input;
     }
 
+    /**
+     * @param index the index to be checked
+     * @return true if the index is not at the end of file (EOF) yet
+     */
     private boolean notEOF(int index) {
         return index < input.length();
     }
 
+    /**
+     * increments the begin pointer until it doesn't point to a whitespace character anymore
+     */
     private void skipWhiteSpaces() {
         while (begin < input.length() && Character.isWhitespace(input.charAt(begin))) {
             begin++;
@@ -53,13 +54,18 @@ public class Scanner implements Iterator<Token> {
         end = begin;
     }
 
-    @Override
+    /**
+     * @return true if there the scanne hasn't reached EOF yet
+     */
     public boolean hasNext() {
         return !(lastToken instanceof EOFToken);
     }
 
-    @Override
-    public Token next() {
+    /**
+     * @return the next token
+     * @throws ParseException if there is a problem with the input String
+     */
+    public Token next() throws ParseException {
         if (lastToken instanceof EOFToken)
             throw new NoSuchElementException();
 
@@ -81,8 +87,7 @@ public class Scanner implements Iterator<Token> {
                         begin = end;
                     else
                         begin = end + 1;
-                    for (var a : automatons)
-                        a.reset();
+                    automatons.forEach(Automaton::reset);
                     return lastToken;
                 }
             }
@@ -97,25 +102,14 @@ public class Scanner implements Iterator<Token> {
                 String wholeString = input.substring(begin);
                 lastToken = automaton.getTokenConstructorWrapper().newInstance(wholeString);
                 automatons.forEach(Automaton::reset);
+                //point being to EOF so it will return an EOFToken the next time next() gets called
                 begin = input.length();
                 return lastToken;
             }
         }
 
-        //if not token could be detected there is an error with input
-
-        //clean error message
-        StringBuilder sb = new StringBuilder();
-        sb.append("error while parsing at index ").append(begin);
-        sb.append("\n");
-        sb.append(input);
-        sb.append("\n");
-        for (int i = 0; i < begin; i++) {
-            sb.append(" ");
-        }
-        sb.append("^");
-        logger.severe(sb.toString());
-
-        throw new IllegalStateException("error while parsing");
+        //if nothing worked by now
+        //throw a ParseException
+        throw new ParseException(input, begin);
     }
 }

@@ -1,7 +1,7 @@
 package compiler;
 
 public class IdentifierToken extends Token {
-    public IdentifierToken(Object value) {
+    public IdentifierToken(String value) {
         super(value);
     }
 

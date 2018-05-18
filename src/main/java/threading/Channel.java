@@ -5,20 +5,47 @@ import java.util.Queue;
 
 
 public class Channel<T> {
+    /**
+     * the time in milliseconds after the Receiver will retry receiving again.
+     * TODO adjust this time
+     */
+    private static final long RETRY_TIME = 2;
+
+    /**
+     * the queue of items
+     */
     private Queue<T> queue = new LinkedList<>();
+
+    /**
+     * the sender object
+     */
     private Sender sender = new Sender(this);
+
+    /**
+     * the receiver object
+     */
     private Receiver receiver = new Receiver(this);
 
+    /**
+     * It is only possible to send receive onto this channel if it is active.
+     * Otherwise it will throw Sender- and ReceiverExceptions in their respective classes
+     */
     private boolean active = true;
 
-    void close() {
-        active = false;
+    private synchronized void close() {
+        this.active = false;
     }
 
+    /**
+     * @return this#sender
+     */
     public Sender getSender() {
         return sender;
     }
 
+    /**
+     * @return this#receiver
+     */
     public Receiver getReceiver() {
         return receiver;
     }
@@ -28,8 +55,6 @@ public class Channel<T> {
             throw new SenderException();
 
         queue.add(t);
-
-        this.notify();
     }
 
     private synchronized T receive() throws ReceiverException {
@@ -38,9 +63,8 @@ public class Channel<T> {
 
         while (queue.isEmpty()) {
             try {
-                this.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                this.wait(RETRY_TIME);
+            } catch (InterruptedException ignored) {
             }
             if (!active)
                 throw new ReceiverException();
@@ -61,7 +85,7 @@ public class Channel<T> {
         }
 
         public void close() {
-            channel.active = false;
+            channel.close();
         }
     }
 
@@ -72,9 +96,12 @@ public class Channel<T> {
             this.channel = channel;
         }
 
-        @SuppressWarnings("UnusedReturnValue")
         public T receive() throws ReceiverException {
             return channel.receive();
+        }
+
+        public void close() {
+            channel.close();
         }
     }
 }

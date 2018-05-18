@@ -1,7 +1,7 @@
 package compiler;
 
 public class StringToken extends Token {
-    public StringToken(Object value) {
+    public StringToken(String value) {
         super(value);
     }
 }

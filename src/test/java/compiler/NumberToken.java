@@ -1,7 +1,7 @@
 package compiler;
 
 public class NumberToken extends Token {
-    public NumberToken(Object numberRepr) {
+    public NumberToken(String numberRepr) {
         super(numberRepr);
     }
 

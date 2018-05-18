@@ -1,5 +1,5 @@
 package compiler;
 
 public interface TokenConstructorWrapper {
-    Token newInstance(Object value);
+    Token newInstance(String value);
 }

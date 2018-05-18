@@ -1,7 +1,7 @@
 package compiler;
 
 public class ClosingParenthToken extends Token {
-    public ClosingParenthToken(Object value) {
+    public ClosingParenthToken(String value) {
         super(value);
     }
 

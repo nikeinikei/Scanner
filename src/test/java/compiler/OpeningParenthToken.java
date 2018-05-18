@@ -1,7 +1,7 @@
 package compiler;
 
 public class OpeningParenthToken extends Token {
-    public OpeningParenthToken(Object value) {
+    public OpeningParenthToken(String value) {
         super(value);
     }
 

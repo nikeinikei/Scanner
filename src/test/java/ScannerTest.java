@@ -3,6 +3,7 @@ import helper.ScannerUtil;
 import helper.StaticVariables;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.NoSuchElementException;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ScannerTest {
     @Test
-    public void testIdentifierAndNumberAutomaton() {
+    public void testIdentifierAndNumberAutomaton() throws ParseException {
         var scanner = new Scanner("( )niki0 2345 timo4", Arrays.asList(
                 StaticVariables.identifierAutomaton,
                 StaticVariables.numberAutomaton,
@@ -21,7 +22,7 @@ public class ScannerTest {
                 StaticVariables.closingParenthAutomaton,
                 StaticVariables.stringAutomaton
         ));
-        ScannerUtil.assertSCannerOutputClasses(scanner, Arrays.asList(
+        ScannerUtil.assertScannerOutputClasses(scanner, Arrays.asList(
                 OpeningParenthToken.class,
                 ClosingParenthToken.class,
                 IdentifierToken.class,
@@ -42,7 +43,7 @@ public class ScannerTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testExceptionOnNextCallWithoutHasNext() {
+    public void testExceptionOnNextCallWithoutHasNext() throws ParseException {
         var scanner = new Scanner("", Collections.emptyList());
         assertTrue(scanner.hasNext());
         assertTrue(scanner.next() instanceof EOFToken);
@@ -51,12 +52,12 @@ public class ScannerTest {
     }
 
     @Test
-    public void testScannerWithStringAutomaton() {
+    public void testScannerWithStringAutomaton() throws ParseException {
         var scanner = new Scanner(
                 "\"hallo\" \"\\n\\r.ddd\\t\"",
                 Collections.singletonList(StaticVariables.stringAutomaton)
         );
-        ScannerUtil.assertSCannerOutputClasses(
+        ScannerUtil.assertScannerOutputClasses(
                 scanner,
                 Arrays.asList(StringToken.class, StringToken.class, EOFToken.class)
         );

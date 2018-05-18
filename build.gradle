@@ -11,3 +11,9 @@ dependencies {
 repositories {
     jcenter()
 }
+
+jar {
+    manifest {
+        attributes('Implementation-Title': project.name)
+    }
+}

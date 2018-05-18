@@ -33,9 +33,8 @@ public class Channel<T> {
     }
 
     private synchronized T receive() throws ReceiverException {
-        if (!active) {
+        if (!active)
             throw new ReceiverException();
-        }
 
         while (queue.isEmpty()) {
             try {
@@ -73,6 +72,7 @@ public class Channel<T> {
             this.channel = channel;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public T receive() throws ReceiverException {
             return channel.receive();
         }

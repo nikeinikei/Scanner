@@ -27,6 +27,9 @@ public class DeterministicFiniteStateAutomaton extends Automaton {
      */
     private Collection<Integer> acceptingStates;
 
+    /**
+     * the current state of the automaton
+     */
     private int currentState;
 
     public DeterministicFiniteStateAutomaton(boolean lookAhead,
@@ -41,6 +44,9 @@ public class DeterministicFiniteStateAutomaton extends Automaton {
         this.acceptingStates = acceptingStates;
     }
 
+    /**
+     * @param e the exception that occurred while calling the transition function
+     */
     private void errorCallback(TransitionFunctionException e) {
         System.err.println("there was an exception during the transitionfunction");
         e.printStackTrace();

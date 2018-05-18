@@ -1,4 +1,6 @@
 import compiler.*;
+import helper.ScannerUtil;
+import helper.StaticVariables;
 import org.junit.Test;
 
 import java.util.Arrays;

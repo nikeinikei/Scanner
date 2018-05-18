@@ -89,6 +89,8 @@ public class Scanner implements Iterator<Token> {
             end++;
         }
 
+        //if at the end of the file, try it again after a whitespace,
+        //since some automatons need it.
         for (var automaton : automatons) {
             automaton.input(' ');
             if (automaton.isAccepting()) {
@@ -99,6 +101,8 @@ public class Scanner implements Iterator<Token> {
                 return lastToken;
             }
         }
+
+        //if not token could be detected there is an error with input
 
         //clean error message
         StringBuilder sb = new StringBuilder();

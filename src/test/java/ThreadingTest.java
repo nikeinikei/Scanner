@@ -1,10 +1,8 @@
 import org.junit.Test;
-import threading.*;
+import threading.Channel;
+import threading.ReceiverException;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 
 public class ThreadingTest {

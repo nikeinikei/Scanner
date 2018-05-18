@@ -2,6 +2,7 @@ package compiler;
 
 /**
  * An Automaton can accept strings that match a certain criteria
+ * This implementation isn't thread safe.
  */
 public abstract class Automaton {
     /**
@@ -37,6 +38,8 @@ public abstract class Automaton {
     /**
      * @param input the input string
      * @return returns true if the Automaton accepts the input String
+     * note: only works if the automaton is in its initial / starting state.
+     * If unsure, call this#reset() before calling this
      */
     public boolean accepts(String input) {
         for (char c : input.toCharArray()) {
@@ -47,9 +50,19 @@ public abstract class Automaton {
         return isAccepting;
     }
 
+    /**
+     * @param input the next character the automaton reads
+     */
     public abstract void input(char input);
 
+    /**
+     * @return depending on the inputs after the last reset,
+     * wether the automaton is in its accepting state
+     */
     public abstract boolean isAccepting();
 
+    /**
+     * reset this automaton to its initial / starting state
+     */
     public abstract void reset();
 }

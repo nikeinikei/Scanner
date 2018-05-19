@@ -4,7 +4,6 @@ import compiler.Automaton;
 import compiler.Scanner;
 import compiler.Token;
 
-import java.text.ParseException;
 import java.util.Collection;
 
 /**
@@ -39,7 +38,7 @@ public class AsynchronousScanner {
                     sender.send(scanner.next());
                 } catch (SenderException e) {
                     System.err.println("receiver was closed before sender could send EOFToken");
-                } catch (ParseException e) {
+                } catch (compiler.ParseException e) {
                     e.printStackTrace();
                 }
             }

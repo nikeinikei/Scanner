@@ -22,7 +22,7 @@ public class DeterministicFiniteStateAutomaton extends Automaton {
 
     /**
      * the collection of accepting states.
-     * this collection contains the state at the end of the
+     * this collection contains the state at the charPointer of the
      * processing, the input is marked as accepted.
      */
     private Collection<Integer> acceptingStates;

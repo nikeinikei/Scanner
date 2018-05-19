@@ -3,7 +3,6 @@ import helper.ScannerUtil;
 import helper.StaticVariables;
 import org.junit.Test;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.NoSuchElementException;
@@ -22,14 +21,23 @@ public class ScannerTest {
                 StaticVariables.closingParenthAutomaton,
                 StaticVariables.stringAutomaton
         ));
-        ScannerUtil.assertScannerOutputClasses(scanner, Arrays.asList(
-                OpeningParenthToken.class,
-                ClosingParenthToken.class,
-                IdentifierToken.class,
-                NumberToken.class,
-                IdentifierToken.class,
-                EOFToken.class
-        ));
+        ScannerUtil.assertScannerOutput(scanner,
+                Arrays.asList(
+                        OpeningParenthToken.class,
+                        ClosingParenthToken.class,
+                        IdentifierToken.class,
+                        NumberToken.class,
+                        IdentifierToken.class,
+                        EOFToken.class
+                ),
+                Arrays.asList(
+                        "(",
+                        ")",
+                        "niki0",
+                        "2345",
+                        "timo4",
+                        null
+                ));
     }
 
     @Test
@@ -57,9 +65,10 @@ public class ScannerTest {
                 "\"hallo\" \"\\n\\r.ddd\\t\"",
                 Collections.singletonList(StaticVariables.stringAutomaton)
         );
-        ScannerUtil.assertScannerOutputClasses(
+        ScannerUtil.assertScannerOutput(
                 scanner,
-                Arrays.asList(StringToken.class, StringToken.class, EOFToken.class)
+                Arrays.asList(StringToken.class, StringToken.class, EOFToken.class),
+                Arrays.asList("\"hallo\"", "\"\\n\\r.ddd\\t\"", null)
         );
     }
 }

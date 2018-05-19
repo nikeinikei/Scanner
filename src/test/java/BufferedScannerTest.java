@@ -41,7 +41,7 @@ public class BufferedScannerTest {
                 )
         );
         var tokenCount = 0;
-        var expectedTokenCount = 10_000_001;
+        var expectedTokenCount = 10_001;
         while (scanner.hasNext()) {
             var token = scanner.next();
             assert token instanceof IdentifierToken

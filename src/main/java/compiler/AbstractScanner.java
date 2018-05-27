@@ -72,11 +72,8 @@ public abstract class AbstractScanner {
 
         StringBuilder wholeTokenStringBuilder = new StringBuilder();
 
-        //memory optimization
-        char currentChar;
-        String wholeString;
         while (notEOF()) {
-            currentChar = getCurrentChar();
+            char currentChar = getCurrentChar();
             for (var automaton : automatons) {
                 automaton.input(currentChar);
                 if (automaton.isAccepting()) {
@@ -84,7 +81,7 @@ public abstract class AbstractScanner {
                         wholeTokenStringBuilder.append(currentChar);
                         readNextCharacter();
                     }
-                    wholeString = wholeTokenStringBuilder.toString();
+                    String wholeString = wholeTokenStringBuilder.toString();
                     lastToken = automaton.getTokenConstructorWrapper().newInstance(wholeString);
                     automatons.forEach(Automaton::reset);
                     return lastToken;
@@ -97,7 +94,7 @@ public abstract class AbstractScanner {
         for (var automaton : automatons) {
             automaton.input(' ');
             if (automaton.isAccepting()) {
-                wholeString = wholeTokenStringBuilder.toString();
+                String wholeString = wholeTokenStringBuilder.toString();
                 lastToken = automaton.getTokenConstructorWrapper().newInstance(wholeString);
                 automatons.forEach(Automaton::reset);
                 return lastToken;

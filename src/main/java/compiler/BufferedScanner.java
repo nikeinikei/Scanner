@@ -7,7 +7,7 @@ import java.util.Collection;
 
 /**
  * a scanner implementation which uses a buffered reader.
- * should be used when the input file is large to improve memory and processor efficiency
+ * should be used when memory is limited and the file is large
  */
 public class BufferedScanner extends AbstractScanner {
     /**

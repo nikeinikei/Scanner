@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class ScannerTest {
     @Test
     public void testIdentifierAndNumberAutomaton() throws ParseException {
-        var scanner = new Scanner("( )niki0 2345 timo4", Arrays.asList(
+        var scanner = new Scanner("( )niki0 2345 sakura4", Arrays.asList(
                 StaticVariables.identifierAutomaton,
                 StaticVariables.numberAutomaton,
                 StaticVariables.openingParenthAutomaton,
